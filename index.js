@@ -9,7 +9,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Event listener for add dropdowns
     addDropdowns.forEach(function(button) {
-        console.log(addDropdowns);
         button.addEventListener("click", handleAddDropdownClick);
     });
 
@@ -25,7 +24,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Event listener for select elements
     document.querySelectorAll(".drop-down").forEach(function(select) {
-        select.addEventListener("change", updateLinesContainer);
+        select.addEventListener("change", function(event) {
+            event.preventDefault(); // Prevent the default behavior (page refresh)
+           
+        });
     });
 
     // Function to handle add button click for input fields
@@ -44,7 +46,6 @@ document.addEventListener("DOMContentLoaded", function() {
         if (card) {
             const dropdowns = card.querySelectorAll(".drop-downs select");
             const value = dropdowns[0].selectedOptions[0].textContent; // Get selected option's textContent
-            console.log(value);
             addWorkspaceLine(card, value);
         }
     }
@@ -63,9 +64,9 @@ document.addEventListener("DOMContentLoaded", function() {
     
         workspaceLine.innerHTML = `
         <div class="fieldConrainer">
-        <span class="fieldName">${fieldName}</span>
-        <span class="fieldValue">${value}</span>
-        <button class="delete-button">Delete</button>
+            <span class="fieldName">${fieldName}</span>
+            <span class="fieldValue">${value}</span>
+            <button class="delete-button">Delete</button>
         </div>
         `;
         const deleteButton = workspaceLine.querySelector(".delete-button");
@@ -73,7 +74,6 @@ document.addEventListener("DOMContentLoaded", function() {
             workspaceLine.remove();
         });
     }
-    
 
     // Function to handle increase button click
     function handleIncreaseButtonClick() {
@@ -98,42 +98,37 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     // Function to update lines container
-    function updateLinesContainer() {
-        const linesContainer = document.querySelector(".lines-container");
-        if (!linesContainer) return; // Ensure lines container exists
+    function updateLinesContainer(select) {
+        const card = select.closest(".card");
+        const fieldName = card.querySelector("h5").textContent;
+        const value = select.selectedOptions[0].textContent;
 
-        linesContainer.innerHTML = ""; // Clear previous content
+        const workspaceLine = document.querySelector(`.lines-container [data-field="${fieldName}"]`);
 
-        const addButtons = document.querySelectorAll(".add-button");
-
-        addButtons.forEach(button => {
-            const card = button.closest(".card");
-            if (card) {
-                const inputs = card.querySelectorAll(".inputs input");
-                const dropdowns = card.querySelectorAll(".drop-downs select");
-                let value;
-                if (inputs.length > 0) {
-                    value = parseInt(inputs[0].value);
-                } else if (dropdowns.length > 0) {
-                    value = dropdowns[0].selectedOptions[0].textContent; // Get selected option's textContent
-                }
-                const fieldName = card.querySelector("h5").textContent;
-                if (value > 0) {
-                    let workspaceLine = document.createElement("div");
-                    workspaceLine.classList.add("workspace-line");
-                    workspaceLine.dataset.field = fieldName;
-                    workspaceLine.innerHTML = `
-                        <span>${fieldName}</span>
-                        <span>${value}</span>
-                        <button class="delete-button">Delete</button>
-                    `;
-                    linesContainer.appendChild(workspaceLine);
-                    const deleteButton = workspaceLine.querySelector(".delete-button");
-                    deleteButton.addEventListener("click", function() {
-                        workspaceLine.remove();
-                    });
-                }
+        if (workspaceLine) {
+            const fieldValueSpan = workspaceLine.querySelector('.fieldValue');
+            if (fieldValueSpan) {
+                fieldValueSpan.textContent = value;
             }
-        });
+        } else {
+            const newWorkspaceLine = document.createElement("div");
+            newWorkspaceLine.classList.add("workspace-line");
+            newWorkspaceLine.dataset.field = fieldName;
+
+            newWorkspaceLine.innerHTML = `
+                <div class="fieldConrainer">
+                    <span class="fieldName">${fieldName}</span>
+                    <span class="fieldValue">${value}</span>
+                    <button class="delete-button">Delete</button>
+                </div>
+            `;
+
+            document.querySelector(".lines-container").appendChild(newWorkspaceLine);
+
+            const deleteButton = newWorkspaceLine.querySelector(".delete-button");
+            deleteButton.addEventListener("click", function() {
+                newWorkspaceLine.remove();
+            });
+        }
     }
 });
