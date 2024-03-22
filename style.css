@@ -89,3 +89,36 @@
     margin-left: 21px;
     margin-bottom: 20px;
   }
+  .add-drop{
+    padding: 10px 20px;
+    background-color: aquamarine;
+    border: none;
+    cursor: pointer;
+  }
+  .lines-container{
+    padding: 20px;
+  }
+  .fieldConrainer{
+    padding: 10PX;
+    width: 100%;
+    display: flex;
+    align-items: center;
+
+    gap: 20PX;
+
+  }
+  .fieldName{
+    width: 33%;
+    margin-left: 30px;
+    
+  }
+  .fieldValue{
+    width: 33%;
+  }
+  .delete-button{
+    padding: 5px 10px;
+    background: red;
+    border: none;
+    color: white;
+    cursor: pointer;
+  }

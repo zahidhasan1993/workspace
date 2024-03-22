@@ -62,9 +62,11 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     
         workspaceLine.innerHTML = `
-            <span>${fieldName}</span>
-            <span>${value}</span>
-            <button class="delete-button">Delete</button>
+        <div class="fieldConrainer">
+        <span class="fieldName">${fieldName}</span>
+        <span class="fieldValue">${value}</span>
+        <button class="delete-button">Delete</button>
+        </div>
         `;
         const deleteButton = workspaceLine.querySelector(".delete-button");
         deleteButton.addEventListener("click", function() {
